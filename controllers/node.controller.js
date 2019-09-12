@@ -6,7 +6,7 @@ module.exports.createNode = function(req, res) {
   Node.create(req.body)
     .then(node => {
       console.log(node);
-      res.json(node.get({plain: true}));
+      res.json(node);
     }, error => {
       res.status(500).send(error);
     });
