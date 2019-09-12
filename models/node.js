@@ -25,9 +25,11 @@ module.exports = (sequelize, DataTypes) => {
     indexes: [
       {
         name: 'parent_id',
+        fields: ['parent_id']
       },
       {
         name: 'list_id',
+        fields: ['list_id']
       }
     ]
   });
@@ -35,6 +37,6 @@ module.exports = (sequelize, DataTypes) => {
     // associations can be defined here
     Node.belongsTo(models.List, {foreignKey: 'list_id'});
   };
-  
+
   return Node;
 };
