@@ -26,3 +26,18 @@ module.exports.editNode = function(req, res) {
     res.status(500).send(error);
   });
 };
+
+module.exports.deleteNode = function(req, res) {
+  Node.findByPk(req.params.id).then(node => {
+    console.log(node);
+    if (node) {
+      node.destroy().then(() => {
+        res.json({deleted_id: req.params.id, success: true});
+      }, error => {
+        res.status(500).send(error);
+      });
+    }
+  }, error => {
+    res.status(500).send(error);
+  });
+};

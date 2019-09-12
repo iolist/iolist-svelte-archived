@@ -12,4 +12,6 @@ router.post('/node', nodeController.createNode);
 
 router.put('/node/:id', nodeController.editNode);
 
+router.delete('/node/:id', nodeController.deleteNode);
+
 module.exports = router;
