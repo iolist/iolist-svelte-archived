@@ -12,4 +12,7 @@ public
 public/**/*
 
 coverage/
-/.env
+.svelte.env
+.env
+
+database.sqlite3

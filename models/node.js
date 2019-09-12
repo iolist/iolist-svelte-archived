@@ -1,0 +1,40 @@
+'use strict';
+module.exports = (sequelize, DataTypes) => {
+  const Node = sequelize.define('Node', {
+    parent_id: {
+      type: DataTypes.INTEGER,
+      references: {
+        model: 'Node',
+        key: 'id',
+      }
+    },
+    list_id: {
+      type: DataTypes.INTEGER,
+      references: {
+        model: 'Node',
+        key: 'id',
+      }
+    },
+    title: DataTypes.STRING,
+    notes: DataTypes.STRING,
+    updated_at: DataTypes.DATE,
+    completed_at: DataTypes.DATE,
+    created_at: DataTypes.DATE
+  }, {
+    timestamps: false,
+    indexes: [
+      {
+        name: 'parent_id',
+      },
+      {
+        name: 'list_id',
+      }
+    ]
+  });
+  Node.associate = function(models) {
+    // associations can be defined here
+    Node.belongsTo(models.List, {foreignKey: 'list_id'});
+  };
+  
+  return Node;
+};
