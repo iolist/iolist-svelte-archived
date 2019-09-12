@@ -4,14 +4,14 @@ module.exports = (sequelize, DataTypes) => {
     parent_id: {
       type: DataTypes.INTEGER,
       references: {
-        model: 'Node',
+        model: 'Nodes', // name in DB
         key: 'id',
       }
     },
     list_id: {
       type: DataTypes.INTEGER,
       references: {
-        model: 'Node',
+        model: 'Nodes', // name in DB
         key: 'id',
       }
     },

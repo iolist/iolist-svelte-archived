@@ -12,7 +12,7 @@ Migration:
 ```node_modules/.bin/sequelize db:migrate```
 
 Seeds:
-```node_modules/.bin/sequelize db:seed:all ```
+```node_modules/.bin/sequelize db:seed:all```
 
 ## How to start:
 

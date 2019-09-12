@@ -4,7 +4,7 @@ module.exports = (sequelize, DataTypes) => {
     name: DataTypes.STRING
   }, {timestamps: false});
   List.associate = function(models) {
-    List.hasMany(models.Node, {as: 'Nodes'});
+    List.hasMany(models.Node, {as: 'Nodes', foreignKey: 'list_id'});
   };
   return List;
 };

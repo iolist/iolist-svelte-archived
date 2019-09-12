@@ -12,7 +12,7 @@ module.exports = {
         allowNull: false,
         type: Sequelize.INTEGER,
         references: {
-          model: 'List',
+          model: 'Lists', // name in DB
           key: 'id'
         },
         onDelete: 'CASCADE',
@@ -20,7 +20,7 @@ module.exports = {
       parent_id: {
         type: Sequelize.INTEGER,
         references: {
-          model: 'Node',
+          model: 'Nodes', // name in DB
           key: 'id'
         },
         onUpdate: 'CASCADE',
