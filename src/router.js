@@ -4,7 +4,7 @@ import { writable } from 'svelte/store';
 
 const router = {
   '/': Home,
-  '/List': List
+  '/list': List
 };
 export default router;
 export const curRoute = writable('/');
