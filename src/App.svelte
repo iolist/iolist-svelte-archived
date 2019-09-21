@@ -1,11 +1,29 @@
 <script>
-	export let name;
+import router, { curRoute } from './router.js';
+import RouterLink from './components/RouterLink.svelte';
+import { onMount } from 'svelte';
+
+onMount(() => {
+  curRoute.set(window.location.pathname);
+  if (!history.state) {
+    window.history.replaceState({path: window.location.pathname}, '',   window.location.href)
+  }
+});
+
+function handlerBackNavigation(event) {
+  curRoute.set(event.state.path)
+}
 </script>
 
 <style>
-	h1 {
-		color: purple;
-	}
 </style>
 
-<h1>Hello {name}!</h1>
+<svelte:window on:popstate={handlerBackNavigation} />
+
+<RouterLink page={{path: '/', name: 'Home'}} />
+<RouterLink page={{path: '/list', name: 'List'}} />
+
+<div id="pageContent">
+  <!-- Page component updates here -->
+  <svelte:component this={router[$curRoute]} />
+</div>
