@@ -18,4 +18,8 @@ router.put('/node/:id', nodeController.editNode);
 
 router.delete('/node/:id', nodeController.deleteNode);
 
+router.use('*', (req, res) => {
+  res.status(404).send({message: 'API not found'});
+});
+
 module.exports = router;
