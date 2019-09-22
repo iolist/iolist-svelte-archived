@@ -1,13 +1,11 @@
 <script>
-import { curRoute } from '../router.js';
+import Router from './router.js';
 export let page = {
   path: '/', name: 'Home'
 }
 function redirectTo(event) {
-    // change current router path
-    curRoute.set(event.target.pathname);
     // push the path into web browser history API
-    window.history.pushState({path: page.path}, '', window.location.origin + page.path);
+    Router.navigate(event.target.pathname);
 }
 </script>
 
