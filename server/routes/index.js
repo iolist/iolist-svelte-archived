@@ -4,7 +4,7 @@ const path = require('path');
 const router = express.Router();
 
 router.get('*', (req, res) => {
-  res.sendFile(path.resolve('public/main.html'));
+  res.sendFile(path.resolve('server/public/main.html'));
 });
 
 module.exports = router;

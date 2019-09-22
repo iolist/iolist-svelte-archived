@@ -6,7 +6,11 @@ const nodeController = require('../controllers/node.controller');
 
 router.get('/lists', listController.getAllLists);
 
+router.post('/list', listController.createList);
+
 router.get('/list/:id', listController.getListContent);
+
+router.delete('/list/:id', listController.deleteList);
 
 router.post('/node', nodeController.createNode);
 
