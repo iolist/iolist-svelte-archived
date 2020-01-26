@@ -1,5 +1,5 @@
 <script>
-  export let id;
+  export let params = {}
 </script>
 
 <style>
@@ -8,4 +8,4 @@
 	}
 </style>
 
-<h1>This is List page {id}</h1>
+<h1>This is List page {params.id}</h1>

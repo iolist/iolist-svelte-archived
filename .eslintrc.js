@@ -23,6 +23,7 @@ module.exports = {
     'linebreak-style': ['error', 'unix'],
     'no-console': 0,
     'quotes': ['error', 'single'],
-    'semi': ['error', 'always']
+    'semi': ['error', 'always'],
+    'no-multiple-empty-lines': ["error", { "max": 2, "maxEOF": 1 }]
   }
 };

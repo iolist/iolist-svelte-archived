@@ -47,6 +47,10 @@ module.exports = {
         exclude: /node_modules/,
         use: 'svelte-loader'
       },
+      {
+        test: /(node_modules).*\.(svelte)$/, // to spa-router improrts
+        use: 'svelte-loader'
+      },
       // {
       //     test: /\.js$/,
       //     exclude: /(node_modules)/,
