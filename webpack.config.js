@@ -7,7 +7,7 @@ const HtmlWebpackPlugin = require('html-webpack-plugin');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 
 const SRC_DIR = path.resolve(__dirname, 'src');
-const DIST = path.resolve(__dirname, '/server/public');
+const DIST = path.resolve(__dirname, 'server/public');
 
 const mode = process.env.NODE_ENV || 'development';
 

@@ -30,7 +30,7 @@
     "sequelize-cli": "^5.5.1",
     "svelte": "^3.12.1",
     "svelte-loader": "^2.13.6",
-    "webpack": "^4.39.3",
+    "webpack": "^4.41.5",
     "webpack-cli": "^3.3.8",
     "webpack-livereload-plugin": "^2.2.0"
   }
