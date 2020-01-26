@@ -1,22 +1,21 @@
 import { writable } from 'svelte/store';
 
-const initialState = {
+export const lists = writable({
   value: null,
   error: null,
-  isFetching: true 
-};
+  isFetching: true
+});
 
-export const listsStore = writable(initialState, async (set) => {
-  set({ value: null, error: null, isFetching: true });
+export const fetch = async () => {
   try {
-    const response = await fetch('/api/lists');
+    const response = await window.fetch('/api/lists');
     const data = await response.json();
     if (response.ok) {
-      set({ value: data, error: null, isFetching: false });
+      lists.set({ value: data, error: null, isFetching: false });
     } else {
-      set({ value: null, error: data, isFetching: false });
+      lists.set({ value: null, error: data, isFetching: false });
     }
   } catch (e) {
-    set({ value: null, error: e, isFetching: false });
+    lists.set({ value: null, error: e, isFetching: false });
   }
-});
+};
