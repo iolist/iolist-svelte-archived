@@ -1,12 +1,14 @@
 <script>
 import {link} from 'svelte-spa-router'
 import active from 'svelte-spa-router/active'
+
 export let page = {
   path: '/', name: 'Home'
 }
+export let customClass;
 </script>
 
-<a href={page.path} use:link  use:active={page.active || page.path}>
+<a href={page.path} use:link  class={customClass} use:active={page.active || page.path}>
   {page.name}
 </a>
 

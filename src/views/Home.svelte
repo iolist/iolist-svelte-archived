@@ -1,9 +1,8 @@
 <script>
-	import {fetch as fetchLists, lists} from '../store/lists.js';
   import {onMount} from 'svelte';
-  import {link} from 'svelte-spa-router'
+  import {link} from 'svelte-spa-router';
+  import {fetch as fetchLists, lists} from '../store/lists.js';
 
-  console.log($lists)
   onMount(fetchLists);
 </script>
 

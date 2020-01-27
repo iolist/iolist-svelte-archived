@@ -1,5 +1,11 @@
 <script>
+  import {onMount} from 'svelte';
+  import {link} from 'svelte-spa-router'
+  import {fetch as fetchList, list} from '../store/list.js';
+
   export let params = {}
+
+  onMount(() => fetchList(params.id));
 </script>
 
 <style>
