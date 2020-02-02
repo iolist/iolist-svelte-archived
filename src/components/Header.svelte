@@ -8,9 +8,10 @@
   </div>
 </div>
 
-<style>
+<style lang="scss">
+  @import 'src/styles/_variables.scss';
 .header {
-  background-color: var(--header-bg);
+  background-color: $header-bg;
   border-bottom: 1px solid rgba(0, 0, 0, 0.1);
   width: 100%;
   min-height: 40px;
@@ -23,7 +24,8 @@
   margin: 0 auto;
   height: 100%;
 }
-.header-link {
-  color: var(--text-white);
+:global(.header-link) {
+  color: $text-white;
+  text-decoration: none;
 }
 </style>

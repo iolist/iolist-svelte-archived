@@ -5,6 +5,7 @@ const { CleanWebpackPlugin } = require('clean-webpack-plugin');
 const LiveReloadPlugin = require('webpack-livereload-plugin');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
+const sveltePreprocess = require('svelte-preprocess');
 
 const SRC_DIR = path.resolve(__dirname, 'src');
 const DIST = path.resolve(__dirname, 'server/public');
@@ -34,7 +35,7 @@ module.exports = {
       process.env.NODE_PATH.split(path.delimiter).filter(Boolean),
     ),
     alias: {
-      svelte: path.resolve('node_modules', 'svelte')
+      svelte: path.resolve('node_modules', 'svelte'),
     },
     extensions: ['.mjs', '.js', '.svelte'],
     mainFields: ['svelte', 'browser', 'module', 'main']
@@ -45,11 +46,20 @@ module.exports = {
       {
         test: /\.(html|svelte)$/,
         exclude: /node_modules/,
-        use: 'svelte-loader'
+        use: {
+          loader: 'svelte-loader',
+          options: {
+            preprocess: sveltePreprocess({ /* options */ })
+          }
+        }
       },
       {
         test: /(node_modules).*\.(svelte)$/, // to spa-router improrts
         use: 'svelte-loader'
+      },
+      {
+        test: /\.s[ac]ss$/i,
+        use: [mode === 'production' ? MiniCssExtractPlugin.loader : 'style-loader', 'css-loader', 'sass-loader']
       },
       // {
       //     test: /\.js$/,
@@ -65,7 +75,7 @@ module.exports = {
                  * For developing, use 'style-loader' instead.
                  * */
           mode === 'production' ? MiniCssExtractPlugin.loader : 'style-loader',
-          'css-loader'
+          'css-loader',
         ]
       },
       {
