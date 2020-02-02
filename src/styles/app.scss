@@ -1,10 +1,12 @@
 @import 'src/styles/_grid.scss';
 @import 'src/styles/_reset.scss';
 @import 'src/styles/_variables.scss';
+@import 'src/styles/_containers.scss';
 
 body {
   min-height: 100%;
   background-color: $body-bg;
+  font-family: Helvetica, Arial sans-serif;
 }
 
 .page {
@@ -12,13 +14,10 @@ body {
   display: flex;
   flex-direction: column;
   background: $white-bg;
-  max-width: 800px;
   min-height: calc(-200px + 100vh);
   border-radius: 10px;
   border-right: solid 1px $border-light;
   border-bottom: solid 1px $border-light;
-  padding: 25px 80px;
-  margin-top: 50px;
-  margin-left: auto;
-  margin-right: auto;
+  margin: 20px 20px 20px;
+  padding: 50px 40px;
 }

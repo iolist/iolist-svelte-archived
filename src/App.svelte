@@ -6,8 +6,10 @@
 </script>
 
 <Header></Header>
-<div class="page">
-  <Router {routes}/>
+<div class="container-l">
+  <div class="page">
+    <Router {routes}/>
+  </div>
 </div>
 
 <style global lang="scss" src="./styles/app.scss"></style>

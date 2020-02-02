@@ -5,10 +5,10 @@ export async function remote(endpoint, store) {
     if (response.ok) {
       store.set({ value: data, error: null, isFetching: false });
     } else {
-      store.set({ value: null, error: data, isFetching: false });
+      store.set({ value: null, error: {data, response}, isFetching: false });
     }
   } catch (e) {
-    store.set({ value: null, error: e, isFetching: false });
+    store.set({ value: null, error: {data: e}, isFetching: false });
   }
 }
 

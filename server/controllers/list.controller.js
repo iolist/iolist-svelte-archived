@@ -23,7 +23,11 @@ module.exports.getAllLists = function(req, res) {
 
 module.exports.getListContent = function(req, res) {
   Node.findAll({ where: {list_id: req.params.id} }).then((result) => {
-    res.json(result);
+    if (result && result.length) {
+      res.json(result);
+    } else {
+      res.status(404).json({});
+    }
   }, error => {
     res.status(500).send(error);
   });

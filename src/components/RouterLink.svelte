@@ -12,9 +12,14 @@ export let customClass;
   {page.name}
 </a>
 
-<style>
+<style lang="scss">
+  @import 'src/styles/_variables.scss';
+
 /* Style for "active" links; need to mark this :global because the router adds the class directly */
-:global(a.active) {
-    color: blue;
-}
+  :global(a.active) {
+    color: $text-black;
+    &:hover  {
+      color: $text-gray;
+    }
+  }
 </style>
