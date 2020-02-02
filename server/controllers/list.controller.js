@@ -21,10 +21,25 @@ module.exports.getAllLists = function(req, res) {
   });
 };
 
+module.exports.getListData = function(req, res) {
+  List.findByPk(req.params.id).then(node => {
+    console.log(node);
+    if (node) {
+      res.json(node);
+    }
+  }, error => {
+    res.status(500).send(error);
+  });
+};
+
 module.exports.getListContent = function(req, res) {
-  Node.findAll({ where: {list_id: req.params.id} }).then((result) => {
-    if (result && result.length) {
-      res.json(result);
+  List.findByPk(req.params.id).then(list => {
+    if (list) {
+      Node.findAll({ where: {list_id: req.params.id} }).then((result) => {
+        res.json({list, nodes: result});
+      }, error => {
+        res.status(500).send(error);
+      });
     } else {
       res.status(404).json({});
     }

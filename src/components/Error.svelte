@@ -2,7 +2,7 @@
   import {onMount} from 'svelte';
   export let error;
 
-  onMount(() => console.log(error));
+  onMount(() => console.error(error));
 </script>
 
 <div class="error">
