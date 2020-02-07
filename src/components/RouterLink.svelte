@@ -19,7 +19,7 @@ export let customClass;
   :global(a.active) {
     color: $text-black;
     &:hover  {
-      color: $text-gray;
+      color: $text-grey;
     }
   }
 </style>

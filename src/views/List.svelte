@@ -24,7 +24,6 @@
 
 <style>
 	h1 {
-    color: red;
     margin-bottom: 20px;
 	}
 </style>

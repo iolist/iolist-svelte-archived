@@ -7,11 +7,25 @@
   onMount(fetchLists);
 </script>
 
-<style global lang="scss">
+<style lang="scss">
   @import 'src/styles/_variables.scss';
 	h1 {
-		color: $border-light;
-	}
+    color: $text-black;
+    margin-bottom: 30px;
+  }
+  .list {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100px;
+    border-radius: 10px;
+    background: $body-bg;
+    text-decoration: none;
+    color: $text-black;
+    &:hover {
+      background: $light-grey-bg;
+    }
+  }
 </style>
 
 <h1>This is Home page</h1>
@@ -20,13 +34,11 @@
 {:else if $lists.isFetching}
 	<Loader/>
 {:else}
-	<ul>
+	<div class="row">
 		{#each $lists.value as item}
-			<li>{item.id}
-        <a href="#/list/{item.id}">
-          {item.name}
-        </a>
-      </li>
+      <a class="col-12 col-6-m list" href="#/list/{item.id}">
+        {item.name}
+      </a>
 		{/each}
-	</ul>
+	</div>
 {/if}

@@ -11,22 +11,22 @@
 <style lang="scss">
   @import 'src/styles/_variables.scss';
 
-.header-content {
-  min-height: 60px;
-  display: flex;
-  justify-content: flex-start;
-  align-items: center;
-  margin: 0 auto;
-  padding-left: 20px;
-  padding-right: 20px;
-  height: 100%;
-}
-:global(.header-link) {
-  color: $text-gray;
-  text-decoration: none;
-  display: block;
-  &:hover  {
-      color: $text-black;
-    }
-}
+  .header-content {
+    min-height: 60px;
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    margin: 0 auto;
+    padding-left: 20px;
+    padding-right: 20px;
+    height: 100%;
+  }
+  :global(.header-link) {
+    color: $text-grey;
+    text-decoration: none;
+    display: block;
+    &:hover  {
+        color: $text-black;
+      }
+  }
 </style>
