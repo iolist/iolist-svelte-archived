@@ -1,4 +1,4 @@
 /build/
-/public/
+/server/public/
 /test/unit/coverage/
 /node_modules/

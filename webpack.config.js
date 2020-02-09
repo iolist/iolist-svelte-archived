@@ -30,6 +30,11 @@ module.exports = {
     filename: 'js/[name].[hash:8].js',
   },
 
+  watchOptions: {
+    poll: true,
+    ignored: /node_modules/
+  },
+
   resolve: {
     modules: ['node_modules', path.resolve(__dirname, 'node_modules')].concat(
       process.env.NODE_PATH.split(path.delimiter).filter(Boolean),
@@ -61,12 +66,13 @@ module.exports = {
         test: /\.s[ac]ss$/i,
         use: [mode === 'production' ? MiniCssExtractPlugin.loader : 'style-loader', 'css-loader', 'sass-loader']
       },
-      // {
-      //     test: /\.js$/,
-      //     exclude: /(node_modules)/,
-      //     loader: require.resolve('babel-loader'),
-      //     // options: { cacheDirectory: true },
-      // },
+      {
+        test: /\.svg$/,
+        loader: 'svg-inline-loader',
+        options: {
+          removeSVGTagAttrs: true
+        }
+      },
       {
         test: /\.css$/,
         use: [
@@ -79,7 +85,7 @@ module.exports = {
         ]
       },
       {
-        test: /\.(bmp|gif|jpe?g|png|svg)$/,
+        test: /\.(bmp|gif|jpe?g|png)$/,
         loader: require.resolve('file-loader'),
         options: {
           limit: 10000,

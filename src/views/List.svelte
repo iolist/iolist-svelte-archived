@@ -24,7 +24,8 @@
 
 <style>
 	h1 {
-    margin-bottom: 20px;
+    margin-bottom: 10px;
+    font-size: 20px;
 	}
 </style>
 

@@ -21,3 +21,7 @@ Seeds:
 `npm run dev`
 - prod
 `npm start`
+
+
+## Icons:
+  To add icons: https://ionicons.com/
