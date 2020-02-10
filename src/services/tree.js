@@ -9,7 +9,7 @@ export function unflatten(arr) {
   }
 
   for (let id in mappedArr) {
-    if (mappedArr.hasOwnProperty(id)) {
+    if (Object.prototype.hasOwnProperty.call(mappedArr, id)) {
       let mappedElem = mappedArr[id];
       if (mappedElem.parent_id) {
         mappedArr[mappedElem['parent_id']]['children'].push(mappedElem);

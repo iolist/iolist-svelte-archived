@@ -4,6 +4,7 @@
 
 <script>
   import { onMount, afterUpdate } from 'svelte';
+  import { fly } from 'svelte/transition';
 
   let contentElem;
   let triggerElem;
@@ -79,12 +80,13 @@
   <div class="dropdown-trigger" on:click={toggle} bind:this={triggerElem}>
     <slot name="trigger"></slot>
   </div>
-
-  <div class="dropdown-menu" style="{position}: {h + margin}px" class:active>
-    <div class="dropdown-content" bind:this={contentElem} on:click={clickOnContent}>
-      <slot name="content"></slot>
+  {#if active}
+    <div class="dropdown-menu" style="{position}: {h + margin}px" transition:fly="{{ y: -50, duration: 150 }}">
+      <div class="dropdown-content" bind:this={contentElem} on:click={clickOnContent}>
+        <slot name="content"></slot>
+      </div>
     </div>
-  </div>
+  {/if}
 </div>
 
 <style lang="scss">
@@ -98,15 +100,11 @@
     overflow: hidden;
   }
   .dropdown-menu {
-    display: none;
     position: absolute;
     left: -10px;
     background: $white-bg;
     box-shadow: 0px 0px 5px 0px rgba(0,0,0,0.25);
     border-radius: 5px;
     z-index: 1000;
-    &.active {
-      display: block;
-    }
   }
 </style>

@@ -19,7 +19,6 @@ module.exports = {
   ],
   extends: 'eslint:recommended',
   rules: {
-    'svelte3/lint-template': 2,
     indent: ['error', 2, { 'SwitchCase': 1 }],
     'linebreak-style': ['error', 'unix'],
     'no-console': 0,

@@ -17,8 +17,6 @@
 		nodes = unflatten($list.value.nodes);
   }
 
-
-
   onMount(() => fetchList(params.id));
 </script>
 

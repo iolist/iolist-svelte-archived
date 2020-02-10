@@ -15,6 +15,7 @@ module.exports = (sequelize, DataTypes) => {
         key: 'id',
       }
     },
+    order: DataTypes.INTEGER,
     title: DataTypes.STRING,
     notes: DataTypes.STRING,
     updated_at: DataTypes.DATE,
