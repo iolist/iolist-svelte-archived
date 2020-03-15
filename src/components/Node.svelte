@@ -45,11 +45,8 @@
         <Dropdown closeOnClick={true}>
           <span slot="trigger" class="icon">{@html ellipsis}</span>
           <div slot="content">
-            <MenuItem item={{callback: () => console.log('click'), text: 'Menu item 1'}}/>
-            <MenuItem item={{callback: () => console.log('click'), text: 'Menu item 2'}}/>
-            <MenuItem item={{callback: () => console.log('click'), text: 'Menu item 3'}} withDivider={true}/>
-            <MenuItem item={{callback: () => console.log('click'), text: 'Menu item 4'}}/>
-            <MenuItem item={{callback: () => console.log('click'), text: 'Menu item 5'}}/>
+            <MenuItem item={{callback: () => console.log('click'), text: 'Delete'}}/>
+            <MenuItem item={{callback: () => console.log('click'), text: 'Add node'}}/>
           </div>
         </Dropdown>
       </div>
@@ -90,9 +87,11 @@
     .present {
       &:hover {
         .ellipsis {
-          opacity: 0.3;
-          &:hover {
-            opacity: 1;
+          .icon {
+            opacity: 0.3;
+            &:hover {
+              opacity: 0.7;
+            }
           }
         }
       }
@@ -108,7 +107,6 @@
   .menu {
     .ellipsis {
       float: left;
-      opacity: 0;
       border-radius: 12px;
       cursor: pointer;
       transition: all 0.2s ease;
@@ -116,7 +114,7 @@
         height: 24px;
         padding: 4px;
         display: block;
-        opacity: 0.5;
+        opacity: 0;
       }
       &:hover {
         background: $hover-bg;
@@ -132,6 +130,9 @@
       border-radius: 12px;
       &:hover {
         background: $hover-bg;
+        .bullet, .caret {
+          opacity: 0.6;
+        }
       }
       .bullet, .caret {
         display: block;
@@ -145,8 +146,9 @@
       }
       .caret {
         height: 14px;
+        transform: rotate(90deg);
         &.collapsed {
-          transform: rotate(90deg);
+          transform: rotate(0deg);
         }
       }
     }
