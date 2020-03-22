@@ -4,7 +4,7 @@
 
   import Dropdown from './Dropdown.svelte';
   import MenuItem from './menu/MenuItem.svelte'
-  import {addNode} from '../store/list.js';
+  import {addNode, updateNode} from '../store/list.js';
 
   import ellipsis from '../icons/ellipsis-vertical.svg';
   import ellipse from '../icons/ellipse.svg';
@@ -14,23 +14,18 @@
 
   let collapsed;
 
-  // function addNode() {
-
-  // }
-
   function onKeydown(e) {
-    // if (e.keyCode === 13) { // enter
+    if (e.keyCode === 13) { // enter
       const inner = e.target.childNodes;
-      console.log(e);
       setTimeout(() => {
-        console.log(inner[0]);
-        // addNode(node, lastChild);
-        // console.log(e.target.lastChild.textContent, node.title.split(e.target.lastChild.textContent)[0]);
-        // node.title = node.title.split(e.target.lastChild.textContent)[0];
-        // console.log(node.title);
+        const newTitle =  inner[inner.length - 1].textContent;
+        addNode(node, newTitle);
+        inner[inner.length - 1].textContent = '';
+        console.log(node);
+        updateNode(node, node);
       })
 
-    // }
+    }
   }
 
   afterUpdate(() => {
@@ -63,7 +58,7 @@
       </div>
     </div>
 
-    <span class="title" contenteditable={true} on:keydown={onKeydown}>{node.title}</span>
+    <span class="title" contenteditable={true} spellcheck="false" on:keydown={onKeydown}>{node.title}</span>
   </div>
   {#if !collapsed}
     <div class="children" transition:fly="{{ x: -50, duration: 150 }}">

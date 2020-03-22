@@ -8,22 +8,15 @@ export const fetch = (id) => {
 };
 
 export const addNode = (neighbor, newTitle) => {
-  console.log(newTitle);
-  list.update(list => {
-    list.value.nodes.some(element => {
-      if (element.id === neighbor.id) {
-        element.title = element.title.split(newTitle)[0];
-        return true;
-      }
-    });
-    list.value.nodes.push({
+  list.update(listN => {
+    console.log(listN);
+    listN.value.nodes.push({
       list_id: neighbor.list_id,
       parent_id: neighbor.parent_id,
       title: newTitle,
       notes: null,
     });
-    console.log(list);
-    return list;
+    return listN;
   });
   // window.fetch('/api/node/', {
   //   method: 'POST',
@@ -34,4 +27,17 @@ export const addNode = (neighbor, newTitle) => {
   //   })
   // });
   // return neighbor;
+};
+
+export const updateNode = (element, newData) => {
+  list.update(listN => {
+    console.log(listN);
+    listN.value.nodes = listN.value.nodes.map(node => {
+      if (node.id === element.id) {
+        node = {...node, ...newData};
+      }
+      return node;
+    });
+    return listN;
+  });
 };
