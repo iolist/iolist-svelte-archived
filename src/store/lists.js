@@ -1,4 +1,4 @@
-import { writable } from 'svelte/store';
+import {writable} from 'svelte/store';
 import {remote, createRemoteData} from '../services/remote';
 
 export const lists = writable(createRemoteData());

@@ -1,10 +1,10 @@
 <script>
-  import {afterUpdate} from 'svelte';
+  import {afterUpdate, onDestroy} from 'svelte';
   // import { current_component } from 'svelte/internal';
-  import { fly } from 'svelte/transition';
+  import {fly} from 'svelte/transition';
 
   import Dropdown from './Dropdown.svelte';
-  import MenuItem from './menu/MenuItem.svelte'
+  import MenuItem from './menu/MenuItem.svelte';
   import Loader from './Loader.svelte';
   import list from '../store/list.js';
 
@@ -34,8 +34,22 @@
           ...node,
           title: newTitle
         });
-      }, 30)
+      }, 30);
     }
+  }
+
+  function addNode() {
+    list.addNode({
+        list_id: node.list_id,
+        parent_id: node.parent_id,
+        title: ''
+      });
+  }
+
+  function deleteNode() {
+    list.deleteNode({
+      id: node.id
+    });
   }
 
   afterUpdate(() => {
@@ -47,10 +61,14 @@
       });
       newNode = false;
       setTimeout(() => {
-        console.log(nodeRef.nextElementSibling.children[0].children[1].focus());
-      }, 30)
+        nodeRef.nextElementSibling.children[0].children[1].focus();
+      }, 30);
     }
   });
+
+  onDestroy(() => {
+		console.log('Destroy initiated');
+	});
 </script>
 
 <div class="node" bind:this={nodeRef}>
@@ -61,8 +79,8 @@
             <Dropdown closeOnClick={true}>
               <span slot="trigger" class="icon">{@html ellipsis}</span>
               <div slot="content">
-                <MenuItem item={{callback: () => console.log('click'), text: 'Delete'}}/>
-                <MenuItem item={{callback: () => console.log('click'), text: 'Add node'}}/>
+                <MenuItem item={{callback: () => deleteNode(), text: 'Delete'}}/>
+                <MenuItem item={{callback: () => addNode(), text: 'Add node'}}/>
               </div>
             </Dropdown>
           {:else}
@@ -117,8 +135,11 @@
       }
     }
     .title {
-      display: inline-block;
+      display: block;
       padding-top: 5px;
+      min-height: 21px;
+      outline: none;
+      margin-left: 58px;
     }
   }
   .children {

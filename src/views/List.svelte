@@ -1,27 +1,32 @@
 <script>
   import {onMount} from 'svelte';
-  import {link} from 'svelte-spa-router'
+  import {link} from 'svelte-spa-router';
 
   import Loader from '../components/Loader.svelte';
   import Error from '../components/Error.svelte';
   import Node from '../components/Node.svelte';
 
-  import {unflatten} from '../services/tree.js'
+  import {unflatten} from '../services/tree.js';
   import list from '../store/list.js';
 
-  export let params = {}
+  export let params = {};
 
   let nodes = 0;
 
   $: if ($list.value && $list.value.nodes) {
-		nodes = unflatten($list.value.nodes);
+    nodes = unflatten($list.value.nodes);
   }
 
   onMount(() => list.fetch(params.id));
 </script>
 
-<style>
+<style lang="scss">
+  @import 'src/styles/_variables.scss';
 	h1 {
+     @include media-breakpoint-up(sm) {
+      text-align: left;
+    }
+    text-align: center;
     margin-bottom: 10px;
     font-size: 20px;
 	}

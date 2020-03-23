@@ -1,8 +1,8 @@
-import { writable } from 'svelte/store';
+import {writable} from 'svelte/store';
 import {remote, createRemoteData} from '../services/remote';
 
 function createList() {
-  const { subscribe, set, update } = writable(createRemoteData());
+  const {subscribe, set, update} = writable(createRemoteData());
 
   return {
     subscribe,
@@ -21,6 +21,15 @@ function createList() {
           }
           return node;
         });
+        return listN;
+      });
+    },
+    deleteNode: (element) => {
+      update(listN => {
+        listN.value.nodes = listN.value.nodes.filter(node => {
+          return !(node.id === element.id);
+        });
+        console.log(listN.value.nodes);
         return listN;
       });
     }

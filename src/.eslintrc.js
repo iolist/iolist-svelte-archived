@@ -24,6 +24,7 @@ module.exports = {
     'no-console': 0,
     'quotes': ['error', 'single'],
     'semi': ['error', 'always'],
+    "object-curly-spacing": ["error"],
     'no-multiple-empty-lines': ["error", { "max": 2, "maxEOF": 1 }]
   }
 };

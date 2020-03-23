@@ -3,8 +3,8 @@
 </script>
 
 <script>
-  import { onMount, afterUpdate } from 'svelte';
-  import { fly } from 'svelte/transition';
+  import {onMount, afterUpdate} from 'svelte';
+  import {fly} from 'svelte/transition';
 
   let contentElem;
   let triggerElem;
