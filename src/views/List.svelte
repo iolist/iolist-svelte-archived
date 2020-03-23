@@ -7,7 +7,7 @@
   import Node from '../components/Node.svelte';
 
   import {unflatten} from '../services/tree.js'
-  import {fetch as fetchList, list} from '../store/list.js';
+  import list from '../store/list.js';
 
   export let params = {}
 
@@ -17,7 +17,7 @@
 		nodes = unflatten($list.value.nodes);
   }
 
-  onMount(() => fetchList(params.id));
+  onMount(() => list.fetch(params.id));
 </script>
 
 <style>

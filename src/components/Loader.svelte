@@ -1,6 +1,10 @@
-<div class="spinner"></div>
+<script>
+  export let adaptive;
+</script>
 
-<style>
+<div class="spinner" class:adaptive="{adaptive}"></div>
+
+<style lang="scss">
   .spinner {
     width: 40px;
     height: 40px;
@@ -10,6 +14,12 @@
     border-radius: 100%;
     -webkit-animation: sk-scaleout 1.0s infinite ease-in-out;
     animation: sk-scaleout 1.0s infinite ease-in-out;
+
+    &.adaptive {
+      margin: 0 auto;
+      width: 100%;
+      height: 100%;
+    }
   }
 
   @-webkit-keyframes sk-scaleout {

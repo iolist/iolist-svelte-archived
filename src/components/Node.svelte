@@ -1,10 +1,12 @@
 <script>
   import {afterUpdate} from 'svelte';
+  // import { current_component } from 'svelte/internal';
   import { fly } from 'svelte/transition';
 
   import Dropdown from './Dropdown.svelte';
   import MenuItem from './menu/MenuItem.svelte'
-  import {addNode, updateNode} from '../store/list.js';
+  import Loader from './Loader.svelte';
+  import list from '../store/list.js';
 
   import ellipsis from '../icons/ellipsis-vertical.svg';
   import ellipse from '../icons/ellipse.svg';
@@ -14,37 +16,60 @@
 
   let collapsed;
 
+  let newNode = false;
+  let nodeRef;
+
+  // this should be rewritten to events (help wanted)
   function onKeydown(e) {
-    if (e.keyCode === 13) { // enter
+    if (e.keyCode === 13) {
+      if (!node.id) {
+        e.preventDefault();
+        return;
+      }
       const inner = e.target.childNodes;
       setTimeout(() => {
-        const newTitle =  inner[inner.length - 1].textContent;
-        addNode(node, newTitle);
-        inner[inner.length - 1].textContent = '';
-        console.log(node);
-        updateNode(node, node);
-      })
-
+        newNode =  {title: inner[inner.length - 1].textContent};
+        const newTitle = inner[0].textContent;
+        list.updateNode(node, {
+          ...node,
+          title: newTitle
+        });
+      }, 30)
     }
   }
 
   afterUpdate(() => {
-		// console.log(node)
+    if (newNode) {
+      list.addNode({
+        list_id: node.list_id,
+        parent_id: node.parent_id,
+        ...newNode
+      });
+      newNode = false;
+      setTimeout(() => {
+        console.log(nodeRef.nextElementSibling.children[0].children[1].focus());
+      }, 30)
+    }
   });
 </script>
 
-<div class="node">
+<div class="node" bind:this={nodeRef}>
   <div class="present">
     <div class="menu">
-      <div class="ellipsis">
-        <Dropdown closeOnClick={true}>
-          <span slot="trigger" class="icon">{@html ellipsis}</span>
-          <div slot="content">
-            <MenuItem item={{callback: () => console.log('click'), text: 'Delete'}}/>
-            <MenuItem item={{callback: () => console.log('click'), text: 'Add node'}}/>
-          </div>
-        </Dropdown>
-      </div>
+        <div class="ellipsis">
+          {#if node.id}
+            <Dropdown closeOnClick={true}>
+              <span slot="trigger" class="icon">{@html ellipsis}</span>
+              <div slot="content">
+                <MenuItem item={{callback: () => console.log('click'), text: 'Delete'}}/>
+                <MenuItem item={{callback: () => console.log('click'), text: 'Add node'}}/>
+              </div>
+            </Dropdown>
+          {:else}
+            <span class="icon loading"><Loader adaptive={true} /></span>
+          {/if}
+        </div>
+
       <div class="point" on:click={()=> collapsed = !collapsed}>
         {#if node.children && node.children.length}
           <div class="caret" class:collapsed>
@@ -58,7 +83,7 @@
       </div>
     </div>
 
-    <span class="title" contenteditable={true} spellcheck="false" on:keydown={onKeydown}>{node.title}</span>
+    <span class="title" contenteditable={true} tabindex="-1" on:keydown={onKeydown}>{@html node.title}</span>
   </div>
   {#if !collapsed}
     <div class="children" transition:fly="{{ x: -50, duration: 150 }}">
@@ -110,6 +135,10 @@
         padding: 4px;
         display: block;
         opacity: 0;
+        &.loading {
+          width: 24px;
+          opacity: 0.4;
+        }
       }
       &:hover {
         background: $hover-bg;
