@@ -7,9 +7,27 @@ function createList() {
   return {
     subscribe,
     fetch: (id) => remote(`/api/list/${id}`, {}, {set}),
-    addNode: (newData) => {
+    addNode: async (newData) => {
+      const tempId = Date.now();
       update(listN => {
-        listN.value.nodes.push(newData);
+        listN.value.nodes.push({temp_id: tempId, ...newData});
+        return listN;
+      });
+      const response = await window.fetch('/api/node', {
+        method:'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(newData)
+      });
+      const data = await response.json();
+      update(listN => {
+        listN.value.nodes = listN.value.nodes.map(node => {
+          if (node.temp_id && node.temp_id === tempId) {
+            node = {...node, ...data};
+          }
+          return node;
+        });
         return listN;
       });
     },

@@ -3,12 +3,12 @@ export async function remote(endpoint, options, {set}) {
     const response = await window.fetch(endpoint, options);
     const data = await response.json();
     if (response.ok) {
-      set({ value: data, error: null, isFetching: false });
+      set({value: data, error: null, isFetching: false});
     } else {
-      set({ value: null, error: {data, response}, isFetching: false });
+      set({value: null, error: {data, response}, isFetching: false});
     }
   } catch (e) {
-    set({ value: null, error: {data: e}, isFetching: false });
+    set({value: null, error: {data: e}, isFetching: false});
   }
 }
 

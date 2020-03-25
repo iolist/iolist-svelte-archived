@@ -7,6 +7,7 @@
   import MenuItem from './menu/MenuItem.svelte';
   import Loader from './Loader.svelte';
   import list from '../store/list.js';
+  import {isCaretPositionAtBegin} from '../services/utils.js'
 
   import ellipsis from '../icons/ellipsis-vertical.svg';
   import ellipse from '../icons/ellipse.svg';
@@ -21,14 +22,33 @@
 
   // this should be rewritten to events (help wanted)
   function onKeydown(e) {
-    if (e.keyCode === 13) {
+    if (e.keyCode === 8) { // backspace
+      if (isCaretPositionAtBegin()) {
+        if (!node.id || !nodeRef.previousElementSibling) {
+          e.preventDefault();
+          return;
+        }
+        const previousElement = nodeRef.previousElementSibling.children[0].children[1];
+        previousElement.focus();
+        const selection = window.getSelection();
+        selection.collapse(previousElement.lastChild, previousElement.lastChild.length);
+        e.preventDefault();
+        list.deleteNode({
+          id: node.id
+        });
+      }
+    }
+    if (e.keyCode === 13) { // enter
       if (!node.id) {
         e.preventDefault();
         return;
       }
       const inner = e.target.childNodes;
       setTimeout(() => {
-        newNode =  {title: inner[inner.length - 1].textContent};
+        newNode = {
+          title: (inner.length > 1) ? inner[inner.length - 1].textContent : '',
+          previous_id: node.id
+        };
         const newTitle = inner[0].textContent;
         list.updateNode(node, {
           ...node,
@@ -42,7 +62,8 @@
     list.addNode({
         list_id: node.list_id,
         parent_id: node.parent_id,
-        title: ''
+        title: '',
+        previous_id: node.id
       });
   }
 

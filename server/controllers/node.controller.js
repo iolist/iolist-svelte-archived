@@ -3,6 +3,7 @@ const models = require('../models');
 const Node = models.Node;
 
 module.exports.createNode = function(req, res) {
+  console.log(req.body);
   Node.create(req.body)
     .then(node => {
       console.log(node);

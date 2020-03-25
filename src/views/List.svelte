@@ -6,7 +6,7 @@
   import Error from '../components/Error.svelte';
   import Node from '../components/Node.svelte';
 
-  import {unflatten} from '../services/tree.js';
+  import {unflatten, sortTreeWithChildren} from '../services/tree.js';
   import list from '../store/list.js';
 
   export let params = {};
@@ -14,7 +14,7 @@
   let nodes = 0;
 
   $: if ($list.value && $list.value.nodes) {
-    nodes = unflatten($list.value.nodes);
+    nodes = sortTreeWithChildren(unflatten($list.value.nodes));
   }
 
   onMount(() => list.fetch(params.id));

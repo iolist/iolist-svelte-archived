@@ -15,7 +15,7 @@ module.exports = (sequelize, DataTypes) => {
         key: 'id',
       }
     },
-    order: DataTypes.INTEGER,
+    previous_id: DataTypes.INTEGER,
     title: DataTypes.STRING,
     notes: DataTypes.STRING,
     updated_at: DataTypes.DATE,

@@ -23,10 +23,9 @@ module.exports = {
           model: 'Nodes', // name in DB
           key: 'id'
         },
-        onUpdate: 'CASCADE',
-        onDelete: 'SET NULL',
+        onDelete: 'CASCADE',
       },
-      order: {
+      previous_id: {
         type: Sequelize.INTEGER,
       },
       title: {

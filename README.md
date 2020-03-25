@@ -15,6 +15,10 @@ Migration:
 Seeds:
 ```node_modules/.bin/sequelize db:seed:all```
 
+## How to revert DB changes
+
+```node_modules/.bin/sequelize db:migrate:undo:all```
+
 ## How to start:
 
 - dev:
