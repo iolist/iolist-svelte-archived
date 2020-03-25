@@ -9,6 +9,7 @@ module.exports.createList = function(req, res) {
       console.log(node);
       res.json(node);
     }, error => {
+      console.error(error);
       res.status(500).send(error);
     });
 };
@@ -17,6 +18,7 @@ module.exports.getAllLists = function(req, res) {
   List.findAll().then((result) => {
     res.json(result);
   }, error => {
+    console.error(error);
     res.status(500).send(error);
   });
 };
@@ -28,6 +30,7 @@ module.exports.getListData = function(req, res) {
       res.json(node);
     }
   }, error => {
+    console.error(error);
     res.status(500).send(error);
   });
 };
@@ -44,6 +47,7 @@ module.exports.getListContent = function(req, res) {
       res.status(404).json({});
     }
   }, error => {
+    console.error(error);
     res.status(500).send(error);
   });
 };
@@ -59,6 +63,7 @@ module.exports.deleteList = function(req, res) {
       });
     }
   }, error => {
+    console.error(error);
     res.status(500).send(error);
   });
 };

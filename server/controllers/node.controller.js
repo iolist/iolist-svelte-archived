@@ -3,12 +3,15 @@ const models = require('../models');
 const Node = models.Node;
 
 module.exports.createNode = function(req, res) {
-  console.log(req.body);
-  Node.create(req.body)
+  Node.create({
+    ...req.body,
+    created_at: new Date()
+  })
     .then(node => {
       console.log(node);
       res.json(node);
     }, error => {
+      console.error(error);
       res.status(500).send(error);
     });
 };
@@ -20,6 +23,7 @@ module.exports.editNode = function(req, res) {
       node.update(req.body).then(() => {
         res.json({id: node.id, success: true});
       }, error => {
+        console.error(error);
         res.status(500).send(error);
       });
     }
@@ -35,6 +39,7 @@ module.exports.deleteNode = function(req, res) {
       node.destroy().then(() => {
         res.json({deleted_id: req.params.id, success: true});
       }, error => {
+        console.error(error);
         res.status(500).send(error);
       });
     }

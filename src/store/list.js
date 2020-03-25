@@ -31,16 +31,27 @@ function createList() {
         return listN;
       });
     },
-    updateNode: (element, newData) => {
+    updateNode: async (element, newData) => {
+      let nodeToUpdate = newData;
       update(listN => {
         listN.value.nodes = listN.value.nodes.map(node => {
           if (node.id === element.id) {
             node = {...node, ...newData};
+            nodeToUpdate = node;
           }
           return node;
         });
         return listN;
       });
+      const response = await window.fetch('/api/node', {
+        method:'PUT',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(nodeToUpdate)
+      });
+      const data = await response.json();
+      console.log(data);
     },
     deleteNode: (element) => {
       update(listN => {

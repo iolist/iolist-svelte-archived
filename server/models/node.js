@@ -36,7 +36,7 @@ module.exports = (sequelize, DataTypes) => {
   });
   Node.associate = function(models) {
     // associations can be defined here
-    Node.belongsTo(models.List, {foreignKey: 'list_id'});
+    Node.belongsTo(models.List, {foreignKey: 'list_id', unique: false});
   };
 
   return Node;

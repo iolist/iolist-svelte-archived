@@ -6,11 +6,13 @@ module.exports = {
         allowNull: false,
         autoIncrement: true,
         primaryKey: true,
+        unique: true,
         type: Sequelize.INTEGER
       },
       list_id: {
         allowNull: false,
         type: Sequelize.INTEGER,
+        unique: false,
         references: {
           model: 'Lists', // name in DB
           key: 'id'
@@ -19,6 +21,7 @@ module.exports = {
       },
       parent_id: {
         type: Sequelize.INTEGER,
+        unique: false,
         references: {
           model: 'Nodes', // name in DB
           key: 'id'
@@ -27,6 +30,7 @@ module.exports = {
       },
       previous_id: {
         type: Sequelize.INTEGER,
+        unique: false
       },
       title: {
         type: Sequelize.STRING
