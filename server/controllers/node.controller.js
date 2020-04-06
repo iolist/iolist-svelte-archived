@@ -21,7 +21,7 @@ module.exports.editNode = function(req, res) {
     console.log(node);
     if (node) {
       node.update(req.body).then(() => {
-        res.json({id: node.id, success: true});
+        res.json({id: node.id});
       }, error => {
         console.error(error);
         res.status(500).send(error);
@@ -37,7 +37,7 @@ module.exports.deleteNode = function(req, res) {
     console.log(node);
     if (node) {
       node.destroy().then(() => {
-        res.json({deleted_id: req.params.id, success: true});
+        res.json({deleted_id: req.params.id});
       }, error => {
         console.error(error);
         res.status(500).send(error);

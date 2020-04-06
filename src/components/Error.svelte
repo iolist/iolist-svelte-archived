@@ -14,9 +14,9 @@
       Error
     {/if}
   </div>
-    {#if error.data && error.data.message}
+    {#if error.message}
     <p class="info">
-      {error.data.name ? error.data.name + ': ' : ''}{error.data.message}
+      {error.name ? error.name + ': ' : ''}{error.message}
     </p>
 
     {/if}

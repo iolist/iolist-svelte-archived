@@ -1,22 +1,17 @@
 export function unflatten(nodes) {
   let tree = [];
-  let mappedArr = {};
+  let nodeMap = new Map();
 
   for(let i = 0; i < nodes.length; i++) {
     let arrElem = nodes[i];
-    mappedArr[arrElem.id] = arrElem;
-    mappedArr[arrElem.id]['children'] = [];
+    nodeMap.set(arrElem.id, {...arrElem, children: []});
   }
 
-  for (let id in mappedArr) {
-    if (Object.prototype.hasOwnProperty.call(mappedArr, id)) {
-      let mappedElem = mappedArr[id];
-      if (mappedElem.parent_id) {
-        mappedArr[mappedElem['parent_id']]['children'].push(mappedElem);
-      }
-      else {
-        tree.push(mappedElem);
-      }
+  for (let mappedElem of nodeMap.values()) {
+    if (mappedElem.parent_id) {
+      nodeMap.get(mappedElem.parent_id)['children'].push(mappedElem);
+    } else {
+      tree.push(mappedElem);
     }
   }
   return tree;

@@ -1,67 +1,88 @@
 import {writable} from 'svelte/store';
-import {remote, createRemoteData} from '../services/remote';
+import {requestEndpoint, createRemoteData} from '../services/remote';
 
 function createList() {
   const {subscribe, set, update} = writable(createRemoteData());
 
-  return {
-    subscribe,
-    fetch: (id) => remote(`/api/list/${id}`, {}, {set}),
-    addNode: async (newData) => {
-      const tempId = Date.now();
+  /**
+   * Fetching whole list
+   * @param {String|Number} id
+   */
+  async function fetchList(id) {
+    set({value: null, error: null, isFetching: true});
+    const result = await requestEndpoint(`/api/list/${id}`);
+    if (result.error) {
+      set({value: null, error: result.error, isFetching: false});
+    } else {
+      set({value: result.data, error: null, isFetching: false});
+    }
+  }
+
+  /**
+   * Adding new node (without id)
+   * @param {Object} newData
+   */
+  async function addNode(newData) {
+    const tempId = Date.now() + '_t';
+    update(listN => {
+      listN.value.nodes.push({...newData, temp_id: tempId});
+      return listN;
+    });
+    const result = await requestEndpoint('/api/node', {method:'POST', body: JSON.stringify(newData)});
+    if (!result.error) {
       update(listN => {
-        listN.value.nodes.push({temp_id: tempId, ...newData});
-        return listN;
-      });
-      const response = await window.fetch('/api/node', {
-        method:'POST',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify(newData)
-      });
-      const data = await response.json();
-      update(listN => {
-        listN.value.nodes = listN.value.nodes.map(node => {
-          if (node.temp_id && node.temp_id === tempId) {
-            node = {...node, ...data};
+        listN.value.nodes.map(element => {
+          if (element.temp_id === tempId) {
+            element = {...element, ...result.data};
+            console.log(element);
           }
-          return node;
+          return element;
         });
-        return listN;
-      });
-    },
-    updateNode: async (element, newData) => {
-      let nodeToUpdate = newData;
-      update(listN => {
-        listN.value.nodes = listN.value.nodes.map(node => {
-          if (node.id === element.id) {
-            node = {...node, ...newData};
-            nodeToUpdate = node;
-          }
-          return node;
-        });
-        return listN;
-      });
-      const response = await window.fetch('/api/node', {
-        method:'PUT',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify(nodeToUpdate)
-      });
-      const data = await response.json();
-      console.log(data);
-    },
-    deleteNode: (element) => {
-      update(listN => {
-        listN.value.nodes = listN.value.nodes.filter(node => {
-          return !(node.id === element.id);
-        });
-        console.log(listN.value.nodes);
         return listN;
       });
     }
+  }
+
+  /**
+   * Update node by id
+   * @param {String|Number} id
+   * @param {Object} newData
+   */
+  async function updateNode(id, newData) {
+    let nodeToUpdate = newData;
+    update(listN => {
+      listN.value.nodes.forEach(element => {
+        if (element.id === id) {
+          element = {...element, ...newData};
+        }
+      });
+      return listN;
+    });
+    const result = await requestEndpoint(`/api/node/${id}`, {method:'PUT', body: JSON.stringify(nodeToUpdate)});
+    console.log(result);
+  }
+
+  /**
+   * Deleting node
+   * @param {String|Number} id
+   */
+  async function deleteNode(id) {
+    update(listN => {
+      listN.value.nodes = listN.value.nodes.filter(element => element.id !== id);
+      return listN;
+    });
+    const result = await requestEndpoint(`/api/node/${id}`, {method:'DELETE'});
+    if (result.error) {
+      // todo: inform user
+    }
+  }
+
+  return {
+    subscribe,
+    fetch: fetchList,
+    addNode: addNode,
+    updateNode: updateNode,
+    deleteNode: deleteNode
   };
 }
 

@@ -11,7 +11,7 @@
 
   export let params = {};
 
-  let nodes = 0;
+  let nodes = [];
 
   $: if ($list.value && $list.value.nodes) {
     nodes = sortTreeWithChildren(unflatten($list.value.nodes));

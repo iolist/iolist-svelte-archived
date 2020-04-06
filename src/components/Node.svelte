@@ -50,7 +50,7 @@
           previous_id: node.id
         };
         const newTitle = inner[0].textContent;
-        list.updateNode(node, {
+        list.updateNode(node.id, {
           ...node,
           title: newTitle
         });
@@ -68,9 +68,7 @@
   }
 
   function deleteNode() {
-    list.deleteNode({
-      id: node.id
-    });
+    list.deleteNode(node.id);
   }
 
   afterUpdate(() => {
