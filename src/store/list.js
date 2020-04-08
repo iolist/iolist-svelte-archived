@@ -20,6 +20,7 @@ function createList() {
 
   /**
    * Adding new node (without id)
+   * Add new node with temp_id -> send request to server -> get the id and update the node
    * @param {Object} newData
    */
   async function addNode(newData) {
@@ -34,7 +35,6 @@ function createList() {
         listN.value.nodes.map(element => {
           if (element.temp_id === tempId) {
             element = {...element, ...result.data};
-            console.log(element);
           }
           return element;
         });
@@ -49,17 +49,18 @@ function createList() {
    * @param {Object} newData
    */
   async function updateNode(id, newData) {
-    let nodeToUpdate = newData;
     update(listN => {
       listN.value.nodes.forEach(element => {
         if (element.id === id) {
           element = {...element, ...newData};
+          console.log('Updated:', element);
         }
       });
       return listN;
     });
-    const result = await requestEndpoint(`/api/node/${id}`, {method:'PUT', body: JSON.stringify(nodeToUpdate)});
-    console.log(result);
+
+    // const result = await requestEndpoint(`/api/node/${id}`, {method:'PUT', body: JSON.stringify(nodeToUpdate)});
+    // console.log(result);
   }
 
   /**
@@ -71,16 +72,17 @@ function createList() {
       listN.value.nodes = listN.value.nodes.filter(element => element.id !== id);
       return listN;
     });
-    const result = await requestEndpoint(`/api/node/${id}`, {method:'DELETE'});
-    if (result.error) {
-      // todo: inform user
-    }
+    // const result = await requestEndpoint(`/api/node/${id}`, {method:'DELETE'});
+    // if (result.error) {
+    //   // todo: inform user
+    // }
   }
 
   return {
     subscribe,
     fetch: fetchList,
     addNode: addNode,
+    update,
     updateNode: updateNode,
     deleteNode: deleteNode
   };

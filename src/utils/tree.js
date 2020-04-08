@@ -19,7 +19,15 @@ export function unflatten(nodes) {
 
 export function sortTreeWithChildren(tree) {
   let map = new Map();
-  tree.forEach((element) => map.set(element.previous_id, element));
+  let lost = []; // elements with wrong or duplicated previous ID,
+  tree.forEach((element) => {
+    const prevId = element.previous_id;
+    if (!map.has(prevId)) {
+      map.set(prevId, element);
+    } else {
+      lost.push({...element, lost: true});
+    }
+  });
   const sortedArray = [];
 
   let lastId = null;
@@ -33,13 +41,7 @@ export function sortTreeWithChildren(tree) {
     map.delete(lastId); // pop previous
     lastId = element.id;
   }
-  // all elements with wrong previous_id which is left
-  map.forEach(element => {
-    if (element.children.length) {
-      element.children = sortTreeWithChildren(element.children);
-    }
-    sortedArray.push(element);
-  });
+  [...map.values(), ...lost].forEach(lostVal => sortedArray.push(lostVal)); // push lost values to an array
   return sortedArray;
 }
 

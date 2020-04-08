@@ -6,7 +6,7 @@
   import Error from '../components/Error.svelte';
   import Node from '../components/Node.svelte';
 
-  import {unflatten, sortTreeWithChildren} from '../services/tree.js';
+  import {unflatten, sortTreeWithChildren} from '../utils/tree.js';
   import list from '../store/list.js';
 
   export let params = {};

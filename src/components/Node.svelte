@@ -1,13 +1,15 @@
 <script>
-  import {afterUpdate, onDestroy} from 'svelte';
-  // import { current_component } from 'svelte/internal';
+  import {afterUpdate, beforeUpdate, onMount} from 'svelte';
   import {fly} from 'svelte/transition';
+  import { createEventDispatcher } from 'svelte';
 
   import Dropdown from './Dropdown.svelte';
   import MenuItem from './menu/MenuItem.svelte';
   import Loader from './Loader.svelte';
   import list from '../store/list.js';
-  import {isCaretPositionAtBegin} from '../services/utils.js'
+  import createNode from '../store/node.js';
+  import {isCaretPositionAt, setCaretPositionToEnd, setCaretPositionToBegin} from '../utils/text.js';
+  import bus from '../services/bus.js';
 
   import ellipsis from '../icons/ellipsis-vertical.svg';
   import ellipse from '../icons/ellipse.svg';
@@ -19,46 +21,119 @@
 
   let newNode = false;
   let nodeRef;
+  let localNode = createNode(node.id);
 
-  // this should be rewritten to events (help wanted)
-  function onKeydown(e) {
-    if (e.keyCode === 8) { // backspace
-      if (isCaretPositionAtBegin()) {
-        if (!node.id || !nodeRef.previousElementSibling) {
-          e.preventDefault();
-          return;
+  function calculateSizeOfTextarea() {
+    const textarea = nodeRef.firstChild.lastChild;
+    textarea.style.height = 'auto';
+    textarea.style.height = textarea.scrollHeight + 'px';
+  }
+
+  /**
+   * Selecting all textareas with class '.title' and get the link on the previous one
+   */
+  function getPreviousNode() {
+    const listOfElements = document.getElementsByClassName('title');
+    for (let i = 0; i < listOfElements.length; i++) {
+      if (listOfElements[i] === nodeRef.firstChild.lastChild) {
+        if (i !== 0) {
+          return listOfElements[i-1]
         }
-        const previousElement = nodeRef.previousElementSibling.children[0].children[1];
-        previousElement.focus();
-        const selection = window.getSelection();
-        selection.collapse(previousElement.lastChild, previousElement.lastChild.length);
-        e.preventDefault();
-        list.deleteNode({
-          id: node.id
-        });
-      }
-    }
-    if (e.keyCode === 13) { // enter
-      if (!node.id) {
-        e.preventDefault();
         return;
       }
-      const inner = e.target.childNodes;
-      setTimeout(() => {
-        newNode = {
-          title: (inner.length > 1) ? inner[inner.length - 1].textContent : '',
-          previous_id: node.id
-        };
-        const newTitle = inner[0].textContent;
-        list.updateNode(node.id, {
-          ...node,
-          title: newTitle
-        });
-      }, 30);
     }
   }
 
-  function addNode() {
+  /**
+   * Selecting all textareas with class '.title' and get the link on the next one
+   */
+  function getNextNode() {
+    const listOfElements = document.getElementsByClassName('title');
+    for (let i = 0; i < listOfElements.length; i++) {
+      if (listOfElements[i] === nodeRef.firstChild.lastChild) {
+        if (i !== listOfElements.length - 1) {
+          return listOfElements[i+1]
+        }
+        return;
+      }
+    }
+  }
+
+  /**
+   *
+   */
+  function onKeydown(e) {
+    switch (e.keyCode) {
+      case 37: // left arrow
+      case 38: // up arrow
+        if (isCaretPositionAt(e.target, 0)) {
+          e.preventDefault();
+          setCaretPositionToEnd(getPreviousNode());
+        }
+        break;
+
+      case 39: // right arrow
+      case 40: // down arrow
+        if (isCaretPositionAt(e.target, node.title.length)) {
+          e.preventDefault();
+          setCaretPositionToBegin(getNextNode());
+        }
+        break;
+
+      case 8: // backspace
+        if (isCaretPositionAt(e.target, 0)) {
+          e.preventDefault();
+          if ($localNode.previous_id) {
+            console.log($localNode);
+            const previousNode = $list.value.nodes.find(el => el.id === $localNode.previous_id);
+            if (previousNode) {
+              list.updateNode(previousNode.id, {
+                title: previousNode.title + $localNode.title
+              });
+            }
+            setCaretPositionToEnd(getPreviousNode());
+            list.deleteNode(node.id);
+          }
+        }
+        break;
+      case 13: // enter
+        e.preventDefault();
+        if (!node.id) {
+          return;
+        }
+        break;
+    }
+
+
+    // if (e.keyCode === 13) { // enter
+    //   e.preventDefault();
+    //   if (!node.id) {
+    //     return;
+    //   }
+    //   // remove selection
+    //   window.getSelection().deleteFromDocument()
+
+    //   console.log(e.target.value);
+    //   console.log(window.getSelection());
+    //   // const inner = e.target.childNodes;
+    //   // setTimeout(() => {
+    //   //   newNode = {
+    //   //     title: (inner.length > 1) ? inner[inner.length - 1].textContent : '',
+    //   //     previous_id: node.id
+    //   //   };
+    //   //   const newTitle = inner[0].textContent;
+    //   //   list.updateNode(node.id, {
+    //   //     ...node,
+    //   //     title: newTitle
+    //   //   });
+    //   // }, 30);
+    // }
+  }
+
+  /**
+   * Add an empty node after this node
+   */
+  function addEmptyNode() {
     list.addNode({
         list_id: node.list_id,
         parent_id: node.parent_id,
@@ -72,22 +147,24 @@
   }
 
   afterUpdate(() => {
-    if (newNode) {
-      list.addNode({
-        list_id: node.list_id,
-        parent_id: node.parent_id,
-        ...newNode
-      });
-      newNode = false;
-      setTimeout(() => {
-        nodeRef.nextElementSibling.children[0].children[1].focus();
-      }, 30);
-    }
+    // if (newNode) {
+    //   list.addNode({
+    //     list_id: node.list_id,
+    //     parent_id: node.parent_id,
+    //     ...newNode
+    //   });
+    //   newNode = false;
+    //   setTimeout(() => {
+    //     nodeRef.nextElementSibling.children[0].children[1].focus();
+    //   }, 30);
+    // }
+    calculateSizeOfTextarea();
+
   });
 
-  onDestroy(() => {
-		console.log('Destroy initiated');
-	});
+  onMount(() => {
+    calculateSizeOfTextarea();
+  });
 </script>
 
 <div class="node" bind:this={nodeRef}>
@@ -99,7 +176,7 @@
               <span slot="trigger" class="icon">{@html ellipsis}</span>
               <div slot="content">
                 <MenuItem item={{callback: () => deleteNode(), text: 'Delete'}}/>
-                <MenuItem item={{callback: () => addNode(), text: 'Add node'}}/>
+                <MenuItem item={{callback: () => addEmptyNode(), text: 'Add node'}}/>
               </div>
             </Dropdown>
           {:else}
@@ -120,7 +197,7 @@
       </div>
     </div>
 
-    <span class="title" contenteditable={true} tabindex="-1" on:keydown={onKeydown}>{@html node.title}</span>
+    <textarea class="title" rows="1" on:keydown={onKeydown} bind:value={$localNode.title}></textarea>
   </div>
   {#if !collapsed}
     <div class="children" transition:fly="{{ x: -50, duration: 150 }}">
@@ -142,6 +219,7 @@
   .node {
     margin-top: 10px;
     .present {
+      display: flex;
       &:hover {
         .ellipsis {
           .icon {
@@ -155,10 +233,14 @@
     }
     .title {
       display: block;
-      padding-top: 5px;
-      min-height: 21px;
+      min-height: 22px;
       outline: none;
-      margin-left: 58px;
+      border: none;
+      background: none;
+      flex-grow: 1;
+      resize: none;
+      line-height: 22px;
+      height: auto;
     }
   }
   .children {

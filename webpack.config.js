@@ -122,7 +122,7 @@ module.exports = {
   },
 
   devtool: mode === 'production' ? false : 'source-map',
-
+  mode,
   plugins: [
     new Dotenv({
       path: path.resolve(__dirname, '.svelte.env'),
