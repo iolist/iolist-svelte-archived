@@ -6,18 +6,13 @@
   import Error from '../components/Error.svelte';
   import Node from '../components/Node.svelte';
 
-  import {unflatten, sortTreeWithChildren} from '../utils/tree.js';
-  import list from '../store/list.js';
+  import {getChildNodes} from '../utils/tree.js';
+  import {nodes, info, status, fetchList} from '../store/list.js';
 
   export let params = {};
+  onMount(() => fetchList(params.id));
 
-  let nodes = [];
-
-  $: if ($list.value && $list.value.nodes) {
-    nodes = sortTreeWithChildren(unflatten($list.value.nodes));
-  }
-
-  onMount(() => list.fetch(params.id));
+  $: parents = getChildNodes($nodes)
 </script>
 
 <style lang="scss">
@@ -32,13 +27,13 @@
 	}
 </style>
 
-{#if $list.error}
-	<Error error={$list.error}/>
-{:else if $list.isFetching}
+{#if $status.error}
+	<Error error={$status.error}/>
+{:else if $status.isFetching}
 	<Loader/>
 {:else}
-  <h1>{$list.value.list.name}</h1>
-  {#each nodes as node}
-    <Node node={node}/>
+  <h1>{$info.name}</h1>
+  {#each parents as node}
+    <Node nodeId={node.id}/>
 	{/each}
 {/if}

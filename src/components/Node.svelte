@@ -6,22 +6,23 @@
   import Dropdown from './Dropdown.svelte';
   import MenuItem from './menu/MenuItem.svelte';
   import Loader from './Loader.svelte';
-  import list from '../store/list.js';
-  import createNode from '../store/node.js';
+  import {nodes, info, status, addNode, updateNode, deleteNode} from '../store/list.js';
+  import {getChildNodes} from '../utils/tree.js';
   import {isCaretPositionAt, setCaretPositionToEnd, setCaretPositionToBegin} from '../utils/text.js';
-  import bus from '../services/bus.js';
 
   import ellipsis from '../icons/ellipsis-vertical.svg';
   import ellipse from '../icons/ellipse.svg';
   import caret from '../icons/caret.svg';
 
-  export let node;
+  export let nodeId;
 
   let collapsed;
 
   let newNode = false;
   let nodeRef;
-  let localNode = createNode(node.id);
+
+  $: node = $nodes.get(nodeId);
+  $: children = getChildNodes($nodes, nodeId)
 
   function calculateSizeOfTextarea() {
     const textarea = nodeRef.firstChild.lastChild;
@@ -83,16 +84,15 @@
       case 8: // backspace
         if (isCaretPositionAt(e.target, 0)) {
           e.preventDefault();
-          if ($localNode.previous_id) {
-            console.log($localNode);
-            const previousNode = $list.value.nodes.find(el => el.id === $localNode.previous_id);
+          if (node.previous_id) {
+            const previousNode = $nodes.get(node.previous_id);
+            deleteNode(node.id);
             if (previousNode) {
-              list.updateNode(previousNode.id, {
-                title: previousNode.title + $localNode.title
+              updateNode(previousNode.id, {
+                title: previousNode.title + node.title
               });
             }
             setCaretPositionToEnd(getPreviousNode());
-            list.deleteNode(node.id);
           }
         }
         break;
@@ -134,7 +134,7 @@
    * Add an empty node after this node
    */
   function addEmptyNode() {
-    list.addNode({
+    addNode({
         list_id: node.list_id,
         parent_id: node.parent_id,
         title: '',
@@ -142,8 +142,8 @@
       });
   }
 
-  function deleteNode() {
-    list.deleteNode(node.id);
+  function deleteThisNode() {
+    deleteNode(node.id);
   }
 
   afterUpdate(() => {
@@ -175,7 +175,7 @@
             <Dropdown closeOnClick={true}>
               <span slot="trigger" class="icon">{@html ellipsis}</span>
               <div slot="content">
-                <MenuItem item={{callback: () => deleteNode(), text: 'Delete'}}/>
+                <MenuItem item={{callback: () => deleteThisNode(), text: 'Delete'}}/>
                 <MenuItem item={{callback: () => addEmptyNode(), text: 'Add node'}}/>
               </div>
             </Dropdown>
@@ -185,7 +185,7 @@
         </div>
 
       <div class="point" on:click={()=> collapsed = !collapsed}>
-        {#if node.children && node.children.length}
+        {#if children && children.length}
           <div class="caret" class:collapsed>
             {@html caret}
           </div>
@@ -197,12 +197,13 @@
       </div>
     </div>
 
-    <textarea class="title" rows="1" on:keydown={onKeydown} bind:value={$localNode.title}></textarea>
+    <textarea class="title" rows="1" on:keydown={onKeydown} bind:value={node.title}></textarea>
   </div>
+
   {#if !collapsed}
     <div class="children" transition:fly="{{ x: -50, duration: 150 }}">
-      {#each node.children as child}
-        <svelte:self node={child}/>
+      {#each children as child}
+        <svelte:self nodeId={child.id}/>
       {/each}
     </div>
   {/if}

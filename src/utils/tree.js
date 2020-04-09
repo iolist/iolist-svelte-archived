@@ -17,7 +17,7 @@ export function unflatten(nodes) {
   return tree;
 }
 
-export function sortTreeWithChildren(tree) {
+export function sortTree(tree) {
   let map = new Map();
   let lost = []; // elements with wrong or duplicated previous ID,
   tree.forEach((element) => {
@@ -34,9 +34,9 @@ export function sortTreeWithChildren(tree) {
   let element;
   while (map.has(lastId)) {
     element = map.get(lastId);
-    if (element.children.length) {
-      element.children = sortTreeWithChildren(element.children);
-    }
+    // if (element.children.length) {
+    //   element.children = sortTreeWithChildren(element.children);
+    // }
     sortedArray.push(element);
     map.delete(lastId); // pop previous
     lastId = element.id;
@@ -45,4 +45,12 @@ export function sortTreeWithChildren(tree) {
   return sortedArray;
 }
 
-// @todo: move sort to unflatten to reduce amount of work
+export function getChildNodes(nodes, parentId = null) {
+  const result = [];
+  for (let node of nodes.values()) {
+    if (node.parent_id === parentId) {
+      result.push(node);
+    }
+  }
+  return sortTree(result);
+}
